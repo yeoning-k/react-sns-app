@@ -11,6 +11,9 @@ const PostForm = () => {
   const params = useParams();
   const [post, setPost] = useState<PostProps | null>(null);
   const [content, setContent] = useState<string>('');
+  const [hashTag, setHashTag] = useState<string>('');
+  const [tags, setTags] = useState<string[]>([]);
+
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -21,7 +24,8 @@ const PostForm = () => {
       if (post) {
         const postRef = doc(db, 'posts', post?.id);
         await updateDoc(postRef, {
-          content: content
+          content: content,
+          hashTags: tags
         });
         navigate(`/posts/${post?.id}`);
         toast.success('게시글을 수정이 완료되었습니다.');
@@ -34,7 +38,8 @@ const PostForm = () => {
             second: '2-digit'
           }),
           uid: user?.uid,
-          email: user?.email
+          email: user?.email,
+          hashTags: tags
         });
         navigate('/');
         toast.success('게시글을 등록이 완료되었습니다.');
@@ -44,7 +49,9 @@ const PostForm = () => {
     }
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const {
       target: { name, value }
     } = e;
@@ -52,9 +59,11 @@ const PostForm = () => {
     if (name === 'content') {
       setContent(value);
     }
-  };
 
-  const handleFileUpload = () => {};
+    if (name === 'hashtag') {
+      setHashTag(e.target.value.trim());
+    }
+  };
 
   const getPost = useCallback(
     async (id: string) => {
@@ -64,6 +73,7 @@ const PostForm = () => {
 
         setPost({ ...(docSnap.data() as PostProps), id: docSnap.id });
         setContent(docSnap?.data()?.content);
+        setTags(docSnap?.data()?.hashTags);
       }
     },
     [params.id]
@@ -72,6 +82,19 @@ const PostForm = () => {
   useEffect(() => {
     if (params?.id) getPost(params?.id);
   }, [params?.id]);
+
+  const handleFileUpload = () => {};
+
+  const handleKeyUp = (e: any) => {
+    if (e.keyCode === 32 && e.target.value.trim() !== '') {
+      if (tags.includes(e.target.value.trim())) {
+        toast.error('같은 태그가 있습니다.');
+      } else {
+        setTags(prev => (prev?.length > 0 ? [...prev, hashTag] : [hashTag]));
+        setHashTag('');
+      }
+    }
+  };
 
   return (
     <form className="post-form" onSubmit={onSubmit}>
@@ -85,15 +108,29 @@ const PostForm = () => {
         value={content}
       />
       <div className="post-form__hashtags">
-        <div className="post-form__tags">
-          <span>#hashtag</span>
-        </div>
+        {tags.length > 0 && (
+          <div className="post-form__tags">
+            {tags?.map((tag, idx) => (
+              <span
+                key={idx}
+                onClick={() => {
+                  setTags(tags?.filter(val => val !== tag));
+                }}
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
         <input
           type="text"
           className="post-form__input"
           name="hashtag"
           id="hashtag"
           placeholder="스페이스 바를 입력하여 해시태그를 등록 할 수 있습니다."
+          onChange={onChange}
+          onKeyUp={handleKeyUp}
+          value={hashTag}
         />
       </div>
       <div className="post-form__bottom">

@@ -11,6 +11,7 @@ export interface PostProps {
   createAt: string;
   uid: string;
   id: string;
+  hashTags: string[];
 }
 
 export default function HomePage() {

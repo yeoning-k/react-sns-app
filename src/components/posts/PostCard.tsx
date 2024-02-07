@@ -46,11 +46,13 @@ const PostCard = ({ post }: { post: PostProps }) => {
       <div className="card__body">
         <Link to={`/posts/${post?.id}`}>
           <div className="card__content">{post?.content}</div>
-          <div className="card__hashtags">
-            <span>#test</span>
-            <span>#test</span>
-            <span>#test</span>
-          </div>
+          {post?.hashTags?.length > 0 && (
+            <div className="card__hashtags">
+              {post.hashTags.map((tag, idx) => (
+                <span key={idx}>#{tag}</span>
+              ))}
+            </div>
+          )}
         </Link>
       </div>
       <div className="card__footer">
