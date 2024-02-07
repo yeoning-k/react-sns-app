@@ -6,6 +6,10 @@ $ft-color-gray: #999;
 $ft-color-default: #111;
 $border-color: #eee;
 
+.hidden {
+  display: none;
+}
+
 .navigation {
   position: fixed;
   bottom: 0;
@@ -14,7 +18,7 @@ $border-color: #eee;
   @include Layout;
   background: #fff;
   display: flex;
-  z-index: 9999;
+  z-index: 8888;
 
   &__box {
     display: flex;
@@ -75,9 +79,9 @@ $border-color: #eee;
   top:0;
   display: grid;
   width: 100%;
-  background: #fff;
+  background-color: #fff;
   grid-template-columns: repeat(2,minmax(0,1fr));
-  z-index: 9999;
+  z-index: 8888;
   
   &__menu {
     padding: 15px 0;
@@ -125,8 +129,8 @@ $border-color: #eee;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       border: 1px solid $border-color;
 
@@ -136,10 +140,19 @@ $border-color: #eee;
       }
     }
 
-    .card__user {
+    .card__box {
       margin-left: 15px;
+    }
+
+    .card__user {
       font-size: 15px;
       font-weight: bold;
+    }
+
+    .card__date {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #999;
     }
   }
 
@@ -168,11 +181,14 @@ $border-color: #eee;
   }
 
   .card__footer {
-    display: grid;
-    grid-template-columns: repeat(3,minmax(0,1fr));
-    border-top: 1px solid $border-color;
+    display: flex;
+    border-top: 1px solid #eee;
+    justify-content: space-between;
 
     > div {
+      cursor: pointer;
+      min-width: 25%;
+      width: 50%;
       padding: 15px 0;
       display: flex;
       gap: 4px;
@@ -183,25 +199,6 @@ $border-color: #eee;
 
       &:first-child {
         border-left: none;
-      }
-    }
-
-    .card__menu {
-      position: relative;
-
-      .card__button {
-        display: none;
-        position: absolute;
-        top: 15px;
-        left: calc(50% - 13px);
-        padding: 10px 10px;
-        background: #fff;
-        border: 1px solid $border-color;
-        border-radius: 4px;
-
-        div {
-          padding: 5px 0;
-        }
       }
     }
   }
@@ -293,6 +290,230 @@ $border-color: #eee;
 
     .profile__lang {
       @include Button(#999, #fff);
+    }
+  }
+}
+.button {
+  padding: 0.2rem 0.8rem;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.25rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+
+// 회원가입
+.form {
+  padding: $padding-gap;
+
+  &__title {
+    padding: 50px 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  &__block {
+    margin: 10px 0 20px;
+    font-size: 14px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #111;
+    }
+
+    input {
+      display: block;
+      box-sizing: border-box;
+      padding: 10px;
+      width: 100%;
+      height: 40px;
+      border-radius: 0.3rem;
+      border: 1px solid $border-color;
+    }
+  }
+
+  &__error {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #ff3c3c;
+  }
+
+  &__link {
+    margin-left: 5px;
+    color: #999;
+
+    &:hover {
+      color: #111;
+      text-decoration: underline;
+    }
+  }
+
+  &__btns {
+    margin-top: 30px;
+
+    .form__btn {
+      margin: 10px 0;
+      width: 100%;
+      height: 45px;
+      border-radius: 4px;
+      font-weight: bold;
+      background: #111;
+      border: none;
+      color:#fff;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      &-google {
+        background: #4385f4;
+      }
+      &-github {
+        background: #343a40;
+      }
+    }
+  }
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  z-index: 9999;
+
+  .loading__animation {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+    z-index: 9999;
+    &::before {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid black;
+      animation: prixClipFix 2s linear infinite;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes prixClipFix {
+      0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+      }
+      25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+      }
+      50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+      }
+      75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+      }
+      100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+      }
+    }
+  }
+}
+
+//post
+.post-form {
+  &__textarea {
+    padding: 20px $padding-gap;
+    display: block;
+    width: 100%;
+    min-height: 200px;
+    outline: none;
+    resize: none;
+    border: none;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    box-sizing: border-box;
+    font-size: 15px;
+  }
+
+  &__input {
+    width: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  &__hashtags {
+    padding: 20px $padding-gap;
+  }
+
+  &__tags {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    span {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+
+  &__file {
+    svg {
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+    }
+  }
+
+  &__submit {
+    @include Button(#111, #fff);
+    padding: 8px 12px;
+  }
+
+  &__bottom {
+    padding: 20px $padding-gap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+  }
+}
+
+.post {
+  .post__header {
+    padding: 0 $padding-gap;
+    display: flex;
+    height: 60px;
+    align-items: center;
+    cursor: pointer;
+
+    svg {
+      font-size: 24px;
     }
   }
 }

@@ -1,13 +1,39 @@
+import PostCard from 'components/posts/PostCard';
+import AuthContext from 'context/AuthContext';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { db } from 'firebaseApp';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  FiUser,
-  FiThumbsUp,
-  FiMessageSquare,
-  FiMoreHorizontal
-} from 'react-icons/fi';
+
+export interface PostProps {
+  email: string;
+  content: string;
+  createAt: string;
+  uid: string;
+  id: string;
+}
 
 export default function HomePage() {
+  const [posts, setPosts] = useState<PostProps[]>([]);
   const navigate = useNavigate();
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      let postsRef = collection(db, 'posts');
+      let postsQuery = query(postsRef, orderBy('createAt', 'desc'));
+
+      onSnapshot(postsQuery, snapShot => {
+        let dataObj = snapShot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc?.id
+        }));
+        setPosts(dataObj as PostProps[]);
+      });
+    }
+  }, []);
+
   return (
     <>
       <div className="page-header">
@@ -24,47 +50,13 @@ export default function HomePage() {
         <div className="tab__menu">팔로잉</div>
         <div className="tab__bar"></div>
       </div>
-
-      {[...Array(10)].map((test, idx) => {
-        return (
-          <div className="card" key={idx}>
-            <div className="card__header">
-              <div className="card__profile">
-                <div className="card__icon">
-                  <FiUser />
-                </div>
-                <div className="card__user">test@test.com</div>
-              </div>
-              <button className="card__following">팔로잉</button>
-            </div>
-            <div className="card__body">
-              <div className="card__content">texttexttexttext</div>
-              <div className="card__hashtags">
-                <span>#test</span>
-                <span>#test</span>
-                <span>#test</span>
-              </div>
-            </div>
-            <div className="card__footer">
-              <div className="card__comments">
-                <FiMessageSquare />
-                1000
-              </div>
-              <div className="card__like">
-                <FiThumbsUp />
-                3000
-              </div>
-              <div className="card__menu">
-                <FiMoreHorizontal />
-                <div className="card__button">
-                  <div className="card__edit">수정하기</div>
-                  <div className="card__delet">삭제하기</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
+      {posts?.length > 0 ? (
+        posts.map(post => {
+          return <PostCard post={post} key={post.id} />;
+        })
+      ) : (
+        <div className="no-items">게시글이 없습니다 🥲</div>
+      )}
     </>
   );
 }
