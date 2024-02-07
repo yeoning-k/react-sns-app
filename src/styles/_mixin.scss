@@ -1,0 +1,14 @@
+@mixin Layout() {
+  margin:0 auto;
+  max-width: 600px;
+}
+
+@mixin Button($bg-color, $ft-color) {
+  padding: 5px 10px;
+  background: $bg-color;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  color: $ft-color;
+  cursor: pointer;
+}
