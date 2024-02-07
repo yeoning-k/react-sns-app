@@ -1,0 +1,298 @@
+@import './_mixin.scss';
+
+$padding-gap: 20px;
+$point-color: #111;
+$ft-color-gray: #999;
+$ft-color-default: #111;
+$border-color: #eee;
+
+.navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @include Layout;
+  background: #fff;
+  display: flex;
+  z-index: 9999;
+
+  &__box {
+    display: flex;
+    width: 25%;
+    height: 50px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $ft-color-gray;
+    cursor: pointer;
+
+    &--active, &:hover {
+      color: $ft-color-default;
+    }
+  }
+
+  &__icon {
+    font-size: 18px;
+  }
+  
+  &__text {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+}
+
+.layout {
+  @include Layout;
+  padding-bottom: 50px;
+  min-height: 100vh;
+  border-left: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+}
+
+.page-header {
+  padding: $padding-gap;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  &__btn {
+    @include Button(#111, #fff);
+  }
+}
+
+.contents {
+  padding: $padding-gap;
+}
+
+.tab {
+  position: sticky;
+  top:0;
+  display: grid;
+  width: 100%;
+  background: #fff;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  z-index: 9999;
+  
+  &__menu {
+    padding: 15px 0;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid $border-color;
+    color: $ft-color-gray;
+    cursor: pointer;
+
+    &--active {
+      font-weight: bold;
+      color: $ft-color-default;
+    }
+
+    &:hover {
+      background: #fafafa;
+    }
+  }
+
+  &__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: $point-color;
+  }
+}
+
+.card {
+  border-bottom: 8px solid #f4f4f4;
+
+  .card__header {
+    padding: $padding-gap;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card__profile {
+    display: flex;
+    align-items: center;
+
+    .card__icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid $border-color;
+
+      svg {
+        font-size: 24px;
+        color: #ccc;
+      }
+    }
+
+    .card__user {
+      margin-left: 15px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+  }
+
+  .card__following {
+    @include Button(#999, #fff);
+  }
+
+  .card__body {
+    padding: $padding-gap;
+    padding-top: 0;
+  }
+
+  .card__content {
+    padding-bottom: $padding-gap;
+    font-size: 15px;
+    color: #111;
+  }
+
+  .card__hashtags {
+    font-size: 14px;
+    color: #999;
+
+    span {
+      margin-right: 10px;
+    }
+  }
+
+  .card__footer {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    border-top: 1px solid $border-color;
+
+    > div {
+      padding: 15px 0;
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      font-size: 13px;
+      color: #999;
+      border-left: 1px solid $border-color;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+
+    .card__menu {
+      position: relative;
+
+      .card__button {
+        display: none;
+        position: absolute;
+        top: 15px;
+        left: calc(50% - 13px);
+        padding: 10px 10px;
+        background: #fff;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+
+        div {
+          padding: 5px 0;
+        }
+      }
+    }
+  }
+}
+
+.form__input {
+  padding: 8px 2px;
+  margin-bottom: 20px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+}
+
+.search {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  background: $border-color;
+  border-radius: 50px;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    font-size: 18px;
+    color: #999;
+    transform: translateY(-50%);
+  }
+
+  input {
+    @extend .form__input;
+    margin: 0;
+    padding-left: 50px;
+    box-sizing: border-box;
+    border-radius: 50px;
+    height: 100%;
+  }
+}
+
+.no-items {
+  margin: $padding-gap;
+  padding: 50px 0;
+  font-size: 12px;
+  text-align: center;
+  color: #999;
+}
+
+.profile {
+  margin-bottom: 50px;
+  text-align: center;
+
+  .profile__icon {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid $border-color;
+
+    svg {
+      font-size: 48px;
+      color: #ccc;
+    }
+  }
+
+  .profile__name {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .profile__email {
+    margin-top:5px;
+    font-size: 14px;
+    color: #999;
+  }
+
+  .profile__btn {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+
+    .profile__edit {
+      @include Button(#111, #fff);
+    }
+
+    .profile__lang {
+      @include Button(#999, #fff);
+    }
+  }
+}
