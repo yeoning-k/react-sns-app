@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
+import PostCard from 'components/posts/PostCard';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
