@@ -1,6 +1,12 @@
 import PostCard from 'components/posts/PostCard';
 import AuthContext from 'context/AuthContext';
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import {
+  Timestamp,
+  collection,
+  onSnapshot,
+  orderBy,
+  query
+} from 'firebase/firestore';
 import { db } from 'firebaseApp';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,10 +14,11 @@ import { useNavigate } from 'react-router-dom';
 export interface PostProps {
   email: string;
   content: string;
-  createAt: string;
+  createdAt: Timestamp;
   uid: string;
   id: string;
   hashTags: string[];
+  imageUrl: string;
 }
 
 export default function HomePage() {
@@ -23,17 +30,21 @@ export default function HomePage() {
   useEffect(() => {
     if (user) {
       let postsRef = collection(db, 'posts');
-      let postsQuery = query(postsRef, orderBy('createAt', 'desc'));
+      let postsQuery = query(postsRef, orderBy('createdAt', 'desc'));
 
       onSnapshot(postsQuery, snapShot => {
-        let dataObj = snapShot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc?.id
-        }));
+        let dataObj = snapShot.docs.map(doc => {
+          return {
+            ...doc.data(),
+            id: doc?.id
+          };
+        });
         setPosts(dataObj as PostProps[]);
       });
     }
   }, []);
+
+  console.log('posts', posts);
 
   return (
     <>

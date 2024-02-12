@@ -172,6 +172,10 @@ $border-color: #eee;
     color: #111;
   }
 
+  .card__image {
+    margin-bottom: 10px;
+  }
+
   .card__hashtags {
     font-size: 14px;
     color: #999;
@@ -485,9 +489,32 @@ $border-color: #eee;
 
   &__file {
     svg {
+      height: 32px;
       font-size: 18px;
       color: #999;
       cursor: pointer;
+    }
+
+    .post-form__image {
+      position: relative;
+
+      &-clear-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 13%);
+        text-align: center;
+
+        svg {
+          height: 20px;
+          font-size: 14px;
+          color: #111;
+        }
+      }
     }
   }
 
@@ -499,7 +526,7 @@ $border-color: #eee;
   &__bottom {
     padding: 20px $padding-gap;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     border-top: 1px solid $border-color;
     border-bottom: 1px solid $border-color;
@@ -512,6 +539,8 @@ $border-color: #eee;
     display: flex;
     height: 60px;
     align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
     cursor: pointer;
 
     svg {

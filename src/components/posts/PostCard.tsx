@@ -1,6 +1,7 @@
 import AuthContext from 'context/AuthContext';
 import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from 'firebaseApp';
+import { deleteObject, ref } from 'firebase/storage';
+import { db, storage } from 'firebaseApp';
 import { PostProps } from 'pages';
 import { useContext } from 'react';
 import {
@@ -21,11 +22,20 @@ const PostCard = ({ post }: { post: PostProps }) => {
     const confirm = window.confirm('해당 게시글을 삭제 하시겠습니까?');
 
     if (confirm) {
+      // if (post?.imageUrl) {
+      //   const imageRef = ref(storage, post?.imageUrl);
+      //   deleteObject(imageRef).catch(error => console.log(error));
+      // }
+
       await deleteDoc(doc(db, 'posts', post.id));
       navigate('/');
       toast.success('게시글을 삭제했습니다.');
     }
   };
+
+  const date = new Date(
+    post.createdAt.seconds * 1000 + post.createdAt.nanoseconds / 1000000
+  );
 
   return (
     <div className="card" key={post?.id}>
@@ -36,7 +46,7 @@ const PostCard = ({ post }: { post: PostProps }) => {
           </div>
           <div className="card__box">
             <div className="card__user">{post?.email}</div>
-            <div className="card__date">{post?.createAt}</div>
+            <div className="card__date">{date.toLocaleString('ko')}</div>
           </div>
         </div>
         {user?.uid !== post?.uid && (
@@ -46,6 +56,11 @@ const PostCard = ({ post }: { post: PostProps }) => {
       <div className="card__body">
         <Link to={`/posts/${post?.id}`}>
           <div className="card__content">{post?.content}</div>
+          {post?.imageUrl && (
+            <div className="card__image">
+              <img src={post?.imageUrl} alt="" width="auto" height="100" />
+            </div>
+          )}
           {post?.hashTags?.length > 0 && (
             <div className="card__hashtags">
               {post.hashTags.map((tag, idx) => (
