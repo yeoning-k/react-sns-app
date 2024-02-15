@@ -17,8 +17,11 @@ export interface PostProps {
   createdAt: Timestamp;
   uid: string;
   id: string;
-  hashTags: string[];
-  imageUrl: string;
+  hashTags?: string[];
+  imageUrl?: string;
+  likes?: string[];
+  likeCount?: number;
+  comments?: any;
 }
 
 export default function HomePage() {
@@ -43,8 +46,6 @@ export default function HomePage() {
       });
     }
   }, []);
-
-  console.log('posts', posts);
 
   return (
     <>
