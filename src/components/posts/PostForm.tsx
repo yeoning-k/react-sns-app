@@ -21,7 +21,6 @@ const PostForm = () => {
   const [hashTag, setHashTag] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<string | null>(null);
-  const [imageUploadFile, setImageUploadFile] = useState<string | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -38,13 +37,11 @@ const PostForm = () => {
     const imageRef = ref(storage, post?.imageUrl);
 
     if (post && post?.imageUrl) {
-      console.log('기존 storage 이미지 삭제', imageRef);
       await deleteObject(imageRef).catch(error => console.log(error));
     }
 
     let imageUrl = '';
     if (imageFile) {
-      console.log('이미지 업로드');
       const data = await uploadString(storageRef, imageFile, 'data_url');
       imageUrl = await getDownloadURL(data?.ref);
     }
