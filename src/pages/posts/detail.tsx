@@ -4,12 +4,11 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from 'firebaseApp';
 import { PostProps } from 'pages';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
+import PageHeader from '../../components/PageHeader';
 
 export default function PostDetailPage() {
   const params = useParams();
-  const navigate = useNavigate();
   const [post, setPost] = useState<PostProps | null>(null);
 
   const getPost = useCallback(
@@ -30,11 +29,7 @@ export default function PostDetailPage() {
 
   return (
     <div className="post">
-      <div className="post__header">
-        <div onClick={() => navigate(-1)}>
-          <FiArrowLeft />
-        </div>
-      </div>
+      <PageHeader />
       {post ? <PostCard post={post} /> : <Loader />}
     </div>
   );
