@@ -534,6 +534,10 @@ $border-color: #eee;
   &__submit {
     @include Button(#111, #fff);
     padding: 8px 12px;
+
+    &:disabled {
+      opacity: 0.2;
+    }
   }
 
   &__bottom {
@@ -558,6 +562,72 @@ $border-color: #eee;
 
     svg {
       font-size: 24px;
+    }
+  }
+}
+
+.comment {
+  display: flex;
+  font-size: 13px;
+  padding: $padding-gap;
+  gap: 10px;
+  
+  &__profile  {
+    text-align: center;
+  }
+  &__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid $border-color;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__box {
+    width: calc(100% - 30px);
+  }
+
+  &__footer {
+    display: flex;
+  }
+
+  &__delete {
+    margin-left: 2px;
+    font-size: 11px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__user {
+    font-weight: bold;
+  }
+
+  &__content {
+    display: inline-block;
+    padding: 10px;
+    margin: 5px 0 10px;
+    border-radius: 5px;
+    background: #eee;
+  }
+
+  &__date {
+    font-size: 11px;
+    color: #999;
+
+    &::after {
+      content: 'ㆍ';
+      padding-left: 2px;
     }
   }
 }

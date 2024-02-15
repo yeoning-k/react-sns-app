@@ -1,11 +1,12 @@
 import Loader from 'components/Loader';
 import PostCard from 'components/posts/PostCard';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from 'firebaseApp';
 import { PostProps } from 'pages';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader';
+import CommentForm from 'components/comments/CommentForm';
 
 export default function PostDetailPage() {
   const params = useParams();
@@ -15,9 +16,9 @@ export default function PostDetailPage() {
     async (id: string) => {
       if (id) {
         const docRef = doc(db, 'posts', id);
-        const docSnap = await getDoc(docRef);
-
-        setPost({ ...(docSnap.data() as PostProps), id: docSnap.id });
+        onSnapshot(docRef, doc => {
+          setPost({ ...(doc.data() as PostProps), id: doc.id });
+        });
       }
     },
     [params.id]
@@ -30,7 +31,14 @@ export default function PostDetailPage() {
   return (
     <div className="post">
       <PageHeader />
-      {post ? <PostCard post={post} /> : <Loader />}
+      {post ? (
+        <>
+          <PostCard post={post} />
+          <CommentForm post={post} />
+        </>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 }
