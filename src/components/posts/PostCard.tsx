@@ -103,7 +103,7 @@ const PostCard = ({ post }: { post: PostProps }) => {
       <div className="card__footer">
         <div className="card__comments">
           <FiMessageSquare />
-          1000
+          {post?.comments ? post?.comments.length : 0}
         </div>
         <div className="card__like" onClick={toggleLike}>
           <FiThumbsUp
