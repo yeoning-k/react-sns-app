@@ -4,12 +4,14 @@ import {
   arrayUnion,
   deleteDoc,
   doc,
+  onSnapshot,
+  setDoc,
   updateDoc
 } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { db, storage } from 'firebaseApp';
 import { PostProps } from 'pages';
-import { useContext } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import {
   FiUser,
   FiThumbsUp,
@@ -20,8 +22,13 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+interface UserProps {
+  id: string;
+}
+
 const PostCard = ({ post }: { post: PostProps }) => {
   const { user } = useContext(AuthContext);
+  const [postFollowers, setPostFollowers] = useState<any>([]);
   const navigate = useNavigate();
 
   const handleDelete = async () => {
@@ -48,7 +55,6 @@ const PostCard = ({ post }: { post: PostProps }) => {
 
     if (user?.uid && post?.likes?.includes(user?.uid)) {
       //좋아요 취소
-      console.log('좋아요 취소');
       await updateDoc(postRef, {
         likes: arrayRemove(user?.uid),
         likeCount:
@@ -62,6 +68,70 @@ const PostCard = ({ post }: { post: PostProps }) => {
       });
     }
   };
+
+  const onClickFollow = async (e: any) => {
+    e.preventDefault();
+    try {
+      if (user?.uid) {
+        const followingRef = doc(db, 'following', user?.uid);
+        await setDoc(
+          followingRef,
+          { users: arrayUnion({ id: post?.uid }) },
+          { merge: true }
+        );
+
+        const followerRef = doc(db, 'follower', post?.uid);
+        await setDoc(
+          followerRef,
+          { users: arrayUnion({ id: user?.uid }) },
+          { merge: true }
+        );
+
+        toast.success('팔로우 했습니다!');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onClickDeleteFollow = async (e: any) => {
+    e.preventDefault();
+    try {
+      if (user?.uid) {
+        const followingRef = doc(db, 'following', user?.uid);
+        await updateDoc(followingRef, {
+          users: arrayRemove({ id: post?.uid })
+        });
+
+        const followerRef = doc(db, 'follower', post?.uid);
+        await updateDoc(followerRef, { users: arrayRemove({ id: user?.uid }) });
+
+        toast.success('팔로우를 취소했니다!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getFollowers = useCallback(async () => {
+    if (post?.uid) {
+      const ref = doc(db, 'follower', post.uid);
+      onSnapshot(ref, doc => {
+        setPostFollowers([]);
+        doc
+          ?.data()
+          ?.users?.map((user: UserProps) =>
+            setPostFollowers((prev: UserProps[]) =>
+              prev ? [...prev, user?.id] : []
+            )
+          );
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (post?.uid) getFollowers();
+  }, [getFollowers, post?.uid]);
 
   return (
     <div className="card" key={post?.id}>
@@ -79,9 +149,19 @@ const PostCard = ({ post }: { post: PostProps }) => {
             <div className="card__date">{date.toLocaleString('ko')}</div>
           </div>
         </div>
-        {user?.uid !== post?.uid && (
-          <button className="card__following">팔로잉</button>
-        )}
+        {user?.uid !== post?.uid &&
+          (postFollowers.includes(user?.uid) ? (
+            <button className="card__following" onClick={onClickDeleteFollow}>
+              팔로잉
+            </button>
+          ) : (
+            <button
+              className="card__following card__follower"
+              onClick={onClickFollow}
+            >
+              팔로워
+            </button>
+          ))}
       </div>
       <div className="card__body">
         <Link to={`/posts/${post?.id}`}>

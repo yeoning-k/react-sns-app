@@ -1,6 +1,6 @@
 import Loader from 'components/Loader';
 import PostCard from 'components/posts/PostCard';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from 'firebaseApp';
 import { PostProps } from 'pages';
 import { useCallback, useEffect, useState } from 'react';

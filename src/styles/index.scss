@@ -166,6 +166,9 @@ $border-color: #eee;
   .card__following {
     @include Button(#999, #fff);
   }
+  .card__follower {
+    @include Button(#111, #fff);
+  }
 
   .card__body {
     padding: $padding-gap;
